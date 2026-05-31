@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azərbaycan Tarix Sitesi</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 10px;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+
+        header p {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 10px;
+            padding: 15px;
+            background: #f5f5f5;
+            border-bottom: 1px solid #e0e0e0;
+            flex-wrap: wrap;
+        }
+
+        .nav-buttons button {
+            flex: 1;
+            min-width: 80px;
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            background: #667eea;
+            color: white;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .nav-buttons button:hover,
+        .nav-buttons button.active {
+            background: #764ba2;
+            transform: translateY(-2px);
+        }
+
+        .content {
+            padding: 20px;
+            min-height: 400px;
+        }
+
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .class-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .class-card {
+            background: #f0f4ff;
+            padding: 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: 0.3s;
+            text-align: center;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .class-card:hover {
+            background: #e0eaff;
+            border-color: #667eea;
+            transform: scale(1.05);
+        }
+
+        .class-card.selected {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .lessons {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .lesson {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .lesson:hover {
+            background: #f0f4ff;
+            transform: translateX(5px);
+        }
+
+        .lesson h3 {
+            color: #667eea;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+
+        .lesson p {
+            font-size: 12px;
+            color: #666;
+            line-height: 1.5;
+        }
+
+        .test-section {
+            background: #fff3cd;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+
+        .test-section h3 {
+            color: #856404;
+            margin-bottom: 10px;
+        }
+
+        .question {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            border: 2px solid #e0e0e0;
+        }
+
+        .question h4 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .option {
+            padding: 10px;
+            background: #f5f5f5;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+            font-size: 13px;
+        }
+
+        .option:hover {
+            background: #e8e8e8;
+            border-color: #667eea;
+        }
+
+        .option.selected {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .option.correct {
+            background: #28a745;
+            color: white;
+            border-color: #28a745;
+        }
+
+        .option.wrong {
+            background: #dc3545;
+            color: white;
+            border-color: #dc3545;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.3s;
+            font-size: 14px;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #764ba2;
+        }
+
+        .btn-secondary {
+            background: #e0e0e0;
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            background: #d0d0d0;
+        }
+
+        .result {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            text-align: center;
+            border: 2px solid #c3e6cb;
+            display: none;
+            white-space: pre-line;
+        }
+
+        .result.show {
+            display: block;
+        }
+
+        .result.error {
+            background: #f8d7da;
+            color: #721c24;
+            border-color: #f5c6cb;
+        }
+
+        .error-msg {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border: 1px solid #f5c6cb;
+        }
+
+        .success-msg {
+            background: #d4edda;
+            color: #155724;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border: 1px solid #c3e6cb;
+        }
+
+        footer {
+            background: #f5f5f5;
+            padding: 10px;
+            text-align: center;
+            font-size: 11px;
+            color: #999;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #667eea;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        h2 {
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+
+        h3 {
+            color: #764ba2;
+            margin-bottom: 10px;
+        }
+
+        p {
+            color: #555;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📚 Azərbaycan Tarix</h1>
+            <p>1-ci sinifdən 9-cu sinifə qədər tarix dərsi</p>
+        </header>
+
+        <div class="nav-buttons">
+            <button class="nav-btn active" data-section="home">🏠 Əsas</button>
+            <button class="nav-btn" data-section="lessons">📖 Dərslər</button>
+            <button class="nav-btn" data-section="test">✏️ Test</button>
+            <button class="nav-btn" data-section="about">ℹ️ Haqqında</button>
+        </div>
+
+        <div class="content">
+            <!-- Ana Səhifə -->
+            <div class="section active" id="home">
+                <h2>Xoş gəlmişsiniz! 👋</h2>
+                <p style="margin: 15px 0; color: #666; line-height: 1.6;">
+                    Bu siteydə Azərbaycan tarixinin ən mühüm hadisələrini öyrənə bilərsiniz. 
+                    Hər sinif üçün xüsusi dərslər hazırlanmışdır.
+                </p>
+                <div class="class-grid" style="margin-top: 20px;">
+                    <div class="class-card" onclick="selectClass(1)">1-ci Sinif</div>
+                    <div class="class-card" onclick="selectClass(2)">2-ci Sinif</div>
+                    <div class="class-card" onclick="selectClass(3)">3-cü Sinif</div>
+                    <div class="class-card" onclick="selectClass(4)">4-cü Sinif</div>
+                    <div class="class-card" onclick="selectClass(5)">5-ci Sinif</div>
+                    <div class="class-card" onclick="selectClass(6)">6-cı Sinif</div>
+                    <div class="class-card" onclick="selectClass(7)">7-ci Sinif</div>
+                    <div class="class-card" onclick="selectClass(8)">8-ci Sinif</div>
+                    <div class="class-card" onclick="selectClass(9)">9-cu Sinif</div>
+                </div>
+            </div>
+
+            <!-- Dərslər -->
+            <div class="section" id="lessons">
+                <h2>📖 Dərslər</h2>
+                <div id="lessonsContainer" style="margin-top: 15px;"></div>
+            </div>
+
+            <!-- Test -->
+            <div class="section" id="test">
+                <h2>✏️ Test Sınağı</h2>
+                <div id="testContainer" style="margin-top: 15px;"></div>
+            </div>
+
+            <!-- Haqqında -->
+            <div class="section" id="about">
+                <h2>ℹ️ Haqqında</h2>
+                <p style="margin: 15px 0; color: #666; line-height: 1.6;">
+                    <strong>Azərbaycan Tarix Sitesi v1.0</strong><br><br>
+                    Bu siteydə cəmi tarix məlumatları toplanmış, tələbələrin öyrənmə prosesini asanlaştırmaq üçün dizayn edilmişdir.
+                </p>
+                <div style="background: #f0f4ff; padding: 15px; border-radius: 8px; margin-top: 15px;">
+                    <strong>Xüsusiyyətlər:</strong>
+                    <ul style="margin-left: 20px; margin-top: 10px; color: #666;">
+                        <li>✅ 9 sinifdən dərslər</li>
+                        <li>✅ İnteraktiv testlər</li>
+                        <li>✅ Mobil uyğun dizayn</li>
+                        <li>✅ Offline işləyir</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            © 2026 Azərbaycan Tarix Sitesi | Mobil Versiya
+        </footer>
+    </div>
+
+    <script>
+        // Tarix Məlumatları
+        const historyData = {
+            1: {
+                title: "1-ci Sinif - Azərbaycan Xalqının Mənşəi",
+                lessons: [
+                    {
+                        id: 1,
+                        title: "Azərbaycan adının mənşəyi",
+                        content: "Azərbaycan adı 'Azar' (atəş) və 'baycan' (sahibi) sözlərindən gəlir. Yəni 'atəşin sahibi'. Bu ad qədim zamanlardan istifadə olunur."
+                    },
+                    {
+                        id: 2,
+                        title: "Orta Asiyada yaşayan qədim xalqlar",
+                        content: "Azərbaycanda qədim dövrlərdən insanlar yaşayırdı. Onların kalalarından arkeoloji tapıntılar qalıb. Bunlar 50 min il əvvələ gedib."
+                    }
+                ],
+                tests: [
+                    {
+                        question: "Azərbaycan adı nə demək?",
+                        options: ["Atəşin sahibi", "Dağın ətəyi", "Su başında", "Meşə sahibi"],
+                        correct: 0
+                    },
+                    {
+                        question: "Azərbaycanda qədim dövrlərdə nə yaşayırdı?",
+                        options: ["Sadəcə heyvanlar", "İnsanlar", "Cənnəbilər", "Heç kim"],
+                        correct: 1
+                    }
+                ]
+            },
+            2: {
+                title: "2-ci Sinif - Köhnə Azərbaycan",
+                lessons: [
+                    {
+                        id: 1,
+                        title: "Atropat Medsiya krallığı",
+                        content: "Atropat Medsiya - qədim Azərbaycan dövlətlərindən biri. e.ə. III əsrdə yaranmışdır. Pəhləvi dövlətinin tərkibində idi."
+                    },
+                    {
+                        id: 2,
+                        title: "Partiya Impersiyası",
+                        content: "Partiya (Parta) - Azərbaycanda hökm sürən güclü keçmiş impersiyası. e.ə. III əsrdən e.ə. VII əsrə qədər hökm sürmüşdür."
+                    }
+                ],
+                tests: [
+                    {
+                        question: "Atropat Medsiya nə vaxt yaranmışdır?",
+                        options: ["e.ə. III əsr", "e.ə. II əsr", "e.ə. I əsr", "e.ə. V əsr"],
+                        correct: 0
+                    },
+                    {
+                        question: "Partiya İmpersiyası nə vaxt hökm sürmüşdür?",
+                        options: ["e.ə. III - VII", "e.ə. I - V", "e.ə. V - X", "e.ə. II - VI"],
+                        correct: 0
+                    }
+                ]
+            },
+            3: {
+                title: "3-cü Sinif - İslam Dövrü",
+                lessons: [
+                    {
+                        id: 1,
+                        title: "İslamın gəlişi",
+                        content: "VII əsrdə İslam Azərbaycana daxil oldu. Bu böyük dəyişiklik gətirdi. İslam dini burada qəbul edildi."
+                    },
+                    {
+                        id: 2,
+                        title: "Abbasilər dövləti",
+                        content: "Abbasilər Azərbaycanı müvəqqətən fəth etdilər. Lakin Azərbaycan müstəqilliyini saxladı. VIII əsrdən XI əsrə qədər Abbassilər hökm sürdü."
+                    }
+                ],
+                tests: [
+                    {
+                        question: "İslam Azərbaycana nə vaxt daxil oldu?",
+                        options: ["VI əsr", "VII əsr", "VIII əsr", "IX əsr"],
+                        correct: 1
+                    },
+                    {
+                        question: "Abbasilər dövləti nə vaxt hökm sürmüşdür?",
+                        options: ["VI-IX", "VII-X", "VIII-XI", "IX-XII"],
+                        correct: 2
+                    }
+                ]
+            },
+            4: {
+                title: "4-cü Sinif - Şirvanşah Dövləti",
+                lessons: [
+                    {
+                        id: 1,
+                        title: "Şirvanşah krallığı",
+                        content: "Şirvanşah dövləti Azərbaycanda ən uzun müddət hökm sürən krallıqdır. 861-ci ildən 1539-cu ilə qədər həmin bölgəni idarə etmişdir."
+                    },
+                    {
+                        id: 2,
+                        title: "Baku şəhərinin qurulması",
+                        content: "Bakı şəhəri Şirvanşahlar dövründə inkişaf etməyə başladı. XII əsrdə Bakı haqqında ilk dəfə yazılı məlumatlar ortaya çıxdı."
+                    }
+                ],
+                tests: [
+                    {
+                        question: "Şirvanşah dövləti nə vaxt yaranmışdır?",
+                        options: ["861-ci il", "X əsr", "XII əsr", "XIII əsr"],
+                        correct: 0
+                    }
+                ]
+            },
+            5: {
+                title: "5-ci Sinif - Safəvilər Dövləti",
+                lessons: [
+                    {
+                        id: 1,
+                        title: "Safəvi İmpersiyası",
+                        content: "Safəvilər XVI-XVIII əsrlərdə Azərbaycanda hökm sürdülər. Bu dövr Azərbaycan tarixinin qızıl dövrü hesab olunur."
+                    },
+                    {
+                        id: 2,
+                        title: "İsfahan Paytaxtı",
+                        content: "Safəvilər İsfahanı paytaxt seçdilər. Bu çox gözəl şəhər oldu. Bununla belə, Azərbaycan da Safəvi dövlətinin mühüm hissəsi idi."
+                    }
+                ],
+                tests: [
+                    {
+                        question: "Safəvilər hansı əsrlərdə Azərbaycanda hökm sürdülər?",
+                        options: ["XII-XIV", "XIV-XVI", "XVI-XVIII", "XVIII-XX"],
+                        correct: 2
+                    }
+                ]
+            },
+            6: {
+                title: "6-cı Sinif - Qəcar Dövləti",
+                lessons: [
+                    {
+                        id: 1,
+                        title: "Qəcar İmpersiyası",
+                        content: "Qəcarlar XVIII əsrin sonunda Farsistanda səltənət qurdular. 1796-cı ildən 1925-ci ilə qədər hökm sürmüşdür."
+                    },
+                    {
+                        id: 2,
+                        title: "Qəcarlar dövründə Azərbaycan",
+                        content: "Qəcar dövrü Azərbaycan üçün çətin və ağır bir vaxt idi. Bu dövr Russo-Farsı müharibələri ilə xarakterizə olunur."
+                    }
+                ],
+                tests: [
+                    {
+                        question: "Qəcar dövləti harada əsas oldu?",
+                        options: ["Azərbaycanda", "Farsistanda", "Türkiyədə", "Anadoluda"],
+                        correct: 1
+                    }
+                ]
+            },
+            7: {
+                title: "7-ci Sinif - Rusiya İmpersiyası",
+                lessons: [
+                    {
+                        id: 1,
+                        title: "Russo-Farsı Müharibələri",
+                        content: "XIX əsrdə Rusiya Farsistanla müharibə etdi. Azərbaycan da bu müharibələrdən təsir gördü. 1813-cü ildə Güləstan müqaviləsi imzalandı."
+                    },
+                    {
+                        id: 2,
+                        title: "Azərbaycanın Rusiyaya birləşməsi",
+                        content: "XIX əsrin başında Azərbaycan Rusiya İmpersiyasının tərkibinə daxil edildi. Bu Azərbaycan tarixində yeni bir dövr açdı."
+                    }
+                ],
+                tests: [
+                    {
+                        question: "Russo-Farsı müharibələri nə vaxt oldu?",
+                        options: ["XVII əsr", "XVIII əsr", "XIX əsr", "XX əsr"],
+                        correct: 2
+                    }
+                ]
+            },
+            8: {
+                title: "8-ci Sinif - XX Əsr Başlanğıcı",
+                lessons: [
+                    {
+                        id: 1,
+                        title: "Azərbaycan Xalq Cümhuriyyəti",
+                        content: "1918-ci ildə Azərbaycan Xalq Cümhuriyyəti elan edildi. Bu Şərqdə ilk demokratik cümhuriyyət idi."
+                    },
+                    {
+                        id: 2,
+                        title: "Gənc Azərbaycan Cəmiyyəti",
+                        content: "Gənc Azərbaycan Cəmiyyəti XIX əsrin sonunda ümummilli hərəkatın lideri idi. Azərbaycan tarixində mühüm rol oynamışdır."
+                    }
+                ],
+                tests: [
+                    {
+                        question: "Azərbaycan Xalq Cümhuriyyəti nə vaxt elan edildi?",
+                        options: ["1917", "1918", "1919", "1920"],
+                        correct: 1
+                    }
+                ]
+            },
+            9: {
+                title: "9-cu Sinif - Müasır Azərbaycan",
+                lessons: [
+                    {
+                        id: 1,
+                        title: "SSRI dövründə Azərbaycan",
+                        content: "1922-ci ildən 1991-ci ilə qədər Azərbaycan SSRI-nin tərkibində idi. Bu dövr Azərbaycanın inkişaf dövrü idi."
+                    },
+                    {
+                        id: 2,
+                        title: "Müstəqil Azərbaycan",
+                        content: "1991-ci ildə Azərbaycan müstəqilliyini elan etdi. Bu gün müstəqil dövlətdir. 1992-ci ildə BMT-nin üzvü oldu."
+                    }
+                ],
+                tests: [
+                    {
+                        question: "Azərbaycan müstəqilliyini nə vaxt elan etdi?",
+                        options: ["1988", "1989", "1990", "1991"],
+                        correct: 3
+                    },
+                    {
+                        question: "Azərbaycan SSRI nə vaxt yaranmışdır?",
+                        options: ["1918", "1920", "1922", "1924"],
+                        correct: 2
+                    }
+                ]
+            }
+        };
+
+        let selectedClass = null;
+        let currentTestAnswers = {};
+
+        // Navigator
+        document.querySelectorAll('.nav-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+                
+                this.classList.add('active');
+                const section = document.getElementById(this.dataset.section);
+                section.classList.add('active');
+
+                if (this.dataset.section === 'lessons' && selectedClass) {
+                    loadLessons(selectedClass);
+                } else if (this.dataset.section === 'test' && selectedClass) {
+                    loadTest(selectedClass);
+                }
+            });
+        });
+
+        function selectClass(classNum) {
+            selectedClass = classNum;
+            document.querySelectorAll('.class-card').forEach(card => card.classList.remove('selected'));
+            event.target.classList.add('selected');
+            
+            // Dərslərə keç
+            document.querySelector('[data-section="lessons"]').click();
+        }
+
+        function loadLessons(classNum) {
+            const data = historyData[classNum];
+            let html = `<h3>${data.title}</h3>`;
+            html += '<div class="lessons">';
+            
+            data.lessons.forEach((lesson, idx) => {
+                html += `
+                    <div class="lesson" onclick="showLessonDetail(${classNum}, ${idx})">
+                        <h3>${lesson.title}</h3>
+                        <p>${lesson.content.substring(0, 80)}...</p>
+                    </div>
+                `;
+            });
+            
+            html += '</div>';
+            document.getElementById('lessonsContainer').innerHTML = html;
+        }
+
+        function showLessonDetail(classNum, lessonIdx) {
+            const lesson = historyData[classNum].lessons[lessonIdx];
+            alert(`📖 ${lesson.title}\n\n${lesson.content}`);
+        }
+
+        function loadTest(classNum) {
+            const data = historyData[classNum];
+            currentTestAnswers = {};
+            
+            let html = `<div class="test-section"><h3>${data.title} - Test</h3>`;
+            
+            if (!data.tests || data.tests.length === 0) {
+                html += '<p style="color: #666;">Bu sinif üçün test hələ hazırlanmamışdır.</p></div>';
+                document.getElementById('testContainer').innerHTML = html;
+                return;
+            }
+            
+            data.tests.forEach((test, idx) => {
+                html += `
+                    <div class="question">
+                        <h4>${idx + 1}. ${test.question}</h4>
+                        <div class="options">
+                `;
+                
+                test.options.forEach((option, optIdx) => {
+                    html += `
+                        <div class="option" onclick="selectAnswer(${classNum}, ${idx}, ${optIdx})">
+                            ${option}
+                        </div>
+                    `;
+                });
+                
+                html += '</div></div>';
+            });
+            
+            html += `
+                <div class="btn-group">
+                    <button class="btn btn-primary" onclick="submitTest(${classNum})">Testi Gönder</button>
+                    <button class="btn btn-secondary" onclick="clearTest(${classNum})">Sıfırla</button>
+                </div>
+                <div class="result" id="testResult"></div>
+            </div>`;
+            
+            document.getElementById('testContainer').innerHTML = html;
+        }
+
+        function selectAnswer(classNum, questionIdx, optionIdx) {
+            const key = `q${questionIdx}`;
+            currentTestAnswers[key] = optionIdx;
+            
+            // UI güncəllə
+            const options = document.querySelectorAll('.question')[questionIdx].querySelectorAll('.option');
+            options.forEach((opt, idx) => {
+                opt.classList.remove('selected');
+                if (idx === optionIdx) opt.classList.add('selected');
+            });
+        }
+
+        function submitTest(classNum) {
+            const data = historyData[classNum];
+            
+            if (!data.tests || data.tests.length === 0) {
+                showResult('Test tapılmadı!', true);
+                return;
+            }
+            
+            if (Object.keys(currentTestAnswers).length !== data.tests.length) {
+                showResult('❌ Xəta: Bütün sualları cavablandırın!', true);
+                return;
+            }
+            
+            let correct = 0;
+            data.tests.forEach((test, idx) => {
+                if (currentTestAnswers[`q${idx}`] === test.correct) {
+                    correct++;
+                }
+            });
+            
+            const total = data.tests.length;
+            const percent = Math.round((correct / total) * 100);
+            
+            let message = `✅ Test Tamamlandı!\n\nDoğru: ${correct}/${total}\nFaiz: ${percent}%\n\n`;
+            
+            if (percent >= 80) {
+                message += '🌟 Çox yaxşı! Davam etmə!';
+            } else if (percent >= 60) {
+                message += '👍 Yaxşı, amma daha çox çalış!';
+            } else {
+                message += '📚 Dərsləri yenidən oxu və test et!';
+            }
+            
+            showResult(message, false);
+        }
+
+        function clearTest(classNum) {
+            currentTestAnswers = {};
+            document.querySelectorAll('.option').forEach(opt => opt.classList.remove('selected'));
+            document.getElementById('testResult').classList.remove('show');
+        }
+
+        function showResult(message, isError) {
+            const resultDiv = document.getElementById('testResult');
+            resultDiv.textContent = message;
+            resultDiv.classList.add('show');
+            if (isError) resultDiv.classList.add('error');
+            else resultDiv.classList.remove('error');
+        }
+
+        // LocalStorage-ə Data Saxla
+        window.addEventListener('beforeunload', () => {
+            localStorage.setItem('selectedClass', selectedClass);
+            localStorage.setItem('testAnswers', JSON.stringify(currentTestAnswers));
+        });
+
+        // Səhifə Yüklənəndə Bərpa Et
+        window.addEventListener('load', () => {
+            const saved = localStorage.getItem('selectedClass');
+            if (saved) selectedClass = parseInt(saved);
+        });
+    </script>
+</body>
+</html>
